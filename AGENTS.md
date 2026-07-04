@@ -24,7 +24,7 @@ meridian mars version patch  # Bump version, commit, tag
 
 Version lives in `mars.toml` under `[package]`. Tags trigger CI releases.
 
-**Marketplace catalog version:** `mars version patch` bumps `mars.toml` but does **not** touch `.claude-plugin/marketplace.json`. When you bump the package, also bump `metadata.version` there by hand to match — it's a cosmetic catalog version with no CI gate, so it drifts silently if you forget (it sat at `0.2.0` while the package was `0.3.10`). The cw **plugin** manifest (`cw/.claude-plugin/plugin.json`) deliberately omits `version` and tracks the git SHA, so it needs no bump.
+**Version sync:** `mars version patch` bumps `mars.toml`. The sync script (`sync_cw_skills.py`) auto-syncs the version into both `.claude-plugin/marketplace.json` (`metadata.version`) and `cw/.claude-plugin/plugin.json` (`version`), staging the files for the in-flight commit. This runs in all modes (check, lint, apply) so the pre-commit hook catches drift.
 
 **Meridian session roots:** Meridian spawns resolve `MERIDIAN_TASK_DIR` for the
 checkout where source work happens, but `MERIDIAN_PROJECT_DIR` stays anchored to
@@ -58,7 +58,7 @@ After editing a generated `skills/<name>/SKILL.md`, run `--apply` so Mars lowers
 
 **`creative-writing-muse`:** source lives in `skills/creative-writing-muse` and is generated into `cw/skills/creative-writing-muse`. It is a user-activated, single-agent muse mode for skills-only environments; the `muse` agents do not load it. The agents follow the Product Lead pattern directly: capture author intent, craft specialist prompts, route work, synthesize results, and speak back to the author.
 
-**Plugin manifest:** `cw/.claude-plugin/plugin.json` is required. Claude Code auto-discovers components without it, but the marketplace **add-from-GitHub** path (Cowork / claude.ai) validates the plugin and *rejects it* if the manifest is missing. `claude plugins validate .claude-plugin/marketplace.json` only checks the marketplace schema, not the plugin — so CI also runs `claude plugins validate cw`, which validates the manifest plus every agent/skill component file. `version` is intentionally omitted from the manifest so the plugin tracks the git commit SHA (always-latest, no extra bump surface).
+**Plugin manifest:** `cw/.claude-plugin/plugin.json` is required. Claude Code auto-discovers components without it, but the marketplace **add-from-GitHub** path (Cowork / claude.ai) validates the plugin and *rejects it* if the manifest is missing. `claude plugins validate .claude-plugin/marketplace.json` only checks the marketplace schema, not the plugin — so CI also runs `claude plugins validate cw`, which validates the manifest plus every agent/skill component file.
 
 ## Slash Commands
 
