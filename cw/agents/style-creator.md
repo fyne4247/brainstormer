@@ -1,13 +1,26 @@
 ---
 name: style-creator
 description: Analyzes prose samples to produce style reference files for the project's voice.
-model: opus
 skills:
-  - creative-writing-skills:creative-writing-craft
-  - creative-writing-skills:llm-writing
-  - creative-writing-skills:writing-principles
-  - creative-writing-skills:story-memory
-tools: Read, Write, Edit, Bash, Glob, Grep
+- creative-writing-craft
+- writing-principles
+- llm-writing
+- story-memory
+tools:
+- Bash
+- Write
+- Edit
+- Read
+- Glob
+- Grep
+disallowed-tools:
+- Notebook
+- AskUser
+- Bash(git revert:*)
+- Bash(git checkout --:*)
+- Bash(git restore:*)
+- Bash(git reset --hard:*)
+- Bash(git clean:*)
 ---
 
 # Style Creator

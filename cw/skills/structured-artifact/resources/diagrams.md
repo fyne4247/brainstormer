@@ -1,7 +1,7 @@
-# Explorable Diagram
+# Diagrams
 
-The default interaction pattern. Use when information has relationships, dependencies,
-or flow.
+Use when information has relationships, dependencies, or flow — after the prose
+it illustrates, never instead of it. Validate with `meridian mermaid check`.
 
 ## Mermaid (default)
 
@@ -13,6 +13,10 @@ layouts or network graphs, see Cytoscape below.
 ```html
 <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
 ```
+
+Use the `dist/mermaid.min.js` IIFE — it exposes the `mermaid` global and
+vendors cleanly for offline use (the ESM entry pulls further imports at
+runtime).
 
 ### Config
 
@@ -75,13 +79,13 @@ const DETAIL = {
   },
 };
 
-async function showDetail(key) {
+function showDetail(key) {
   const d = DETAIL[key]; if (!d) return;
   document.getElementById('detail-title').textContent = d.title;
   document.getElementById('detail-desc').textContent = d.desc;
-  if (d.code && window.codeToHtml) {
+  if (d.code && window.hljs) {
     document.getElementById('detail-code').innerHTML =
-      await codeToHtml(d.code, { lang: d.lang, theme: 'vitesse-light' });
+      `<pre><code>${hljs.highlight(d.code, { language: d.lang }).value}</code></pre>`;
   }
   document.getElementById('detail-panel').classList.remove('collapsed');
 }
@@ -142,7 +146,7 @@ window.addEventListener('pointerup', e => { pts.delete(e.pointerId); pinchDist =
 Default to renderer theme colors. Use stroke-only `classDef` for emphasis so nodes
 adapt to any background:
 
-```mermaid
+```text
 classDef highlight stroke:#f59e0b,stroke-width:2px
 ```
 
@@ -154,7 +158,7 @@ Use Cytoscape.js when you need force-directed layout, network visualization, or
 richer interaction than Mermaid supports. ~136 KB gzipped.
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.34.0/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3/dist/cytoscape.min.js"></script>
 ```
 
 ```js

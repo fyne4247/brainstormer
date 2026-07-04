@@ -1,15 +1,25 @@
 ---
 name: writer
 description: Production prose from scene briefs, revision notes, and style references; uses progressive mode guidance for fresh drafts, revisions, bridges, alternate takes, and line polish.
-model: opus
+model: claude-opus-4-6
 skills:
-  - creative-writing-skills:creative-writing-modes
-  - creative-writing-skills:creative-writing-craft
-  - creative-writing-skills:creative-writing-craft
-  - creative-writing-skills:writing-principles
-  - creative-writing-skills:llm-writing
-  - creative-writing-skills:story-memory
-tools: Read, Write, Edit, Bash, Glob, Grep
+- creative-writing-modes
+- creative-writing-craft
+- writing-principles
+- story-memory
+- llm-writing
+tools:
+- Bash
+- Write
+- Edit
+disallowed-tools:
+- Notebook
+- AskUser
+- Bash(git revert:*)
+- Bash(git checkout --:*)
+- Bash(git restore:*)
+- Bash(git reset --hard:*)
+- Bash(git clean:*)
 ---
 
 # Writer
@@ -24,10 +34,11 @@ canon before touching the draft. The brief says what must happen; style files
 say how it should sound; critique notes say what reader simulation failed. You
 own how it reads on the page.
 
-Use `/creative-writing-craft` and `/creative-writing-craft` for craft execution. Use
-`/llm-writing` to catch unchosen defaults, not to flatten the prose into tidy
-explanation. Ambiguity, silence, repetition, compression, or fragmentation are
-valid when they create the intended reader simulation.
+Use `/creative-writing-craft` for craft execution: `resources/prose-writing.md`
+for immersion and rhythm, `resources/scene-construction.md` for how scenes work
+on the page. Use `/llm-writing` to catch unchosen defaults, not to flatten the
+prose into tidy explanation. Ambiguity, silence, repetition, compression, or
+fragmentation are valid when they create the intended reader effect.
 
 ## Output
 

@@ -1,15 +1,18 @@
 # Data Table
 
 Filterable, sortable, searchable table. Use when the information is records with
-columns.
+columns. For ≤20 rows, a plain `<table>` with click-to-sort headers is less code
+than any library — reach for Tabulator when the reader needs live filtering or
+the rows outgrow a screen.
 
 ## Library
 
-**Tabulator** — ~101 KB gzipped JS, ~4 KB CSS.
+**Tabulator** — ~101 KB gzipped JS, ~4 KB CSS. Mature, zero dependencies,
+virtual DOM rendering for large datasets.
 
 ```html
-<link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.5.2/dist/css/tabulator.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6.5.2/dist/js/tabulator.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6/dist/css/tabulator.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6/dist/js/tabulator.min.js"></script>
 ```
 
 ## Minimal Example
@@ -46,8 +49,3 @@ table.on("rowClick", (e, row) => {
 
 Handles 100–500 rows without pagination. For larger datasets, enable Tabulator's
 virtual DOM rendering.
-
-## Plain DOM Alternative
-
-For ≤20 rows with basic sorting, a `<table>` with click-to-sort headers is less
-code than loading Tabulator.

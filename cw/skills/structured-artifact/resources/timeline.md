@@ -1,15 +1,17 @@
 # Timeline
 
 Chronological events on a zoomable, pannable axis with click-to-detail. Use for
-event histories, release timelines, or project milestones.
+event histories, release timelines, or project milestones. For ≤10 static
+events, a styled `<ol>` with click handlers is simpler — reach for vis-timeline
+when the reader needs to pan and zoom through time.
 
 ## Library
 
 **vis-timeline** — ~154 KB gzipped JS, ~4 KB CSS.
 
 ```html
-<link href="https://cdn.jsdelivr.net/npm/vis-timeline@8.5.1/styles/vis-timeline-graph2d.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/vis-timeline@8.5.1/standalone/umd/vis-timeline-graph2d.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/vis-timeline@8/styles/vis-timeline-graph2d.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/vis-timeline@8/standalone/umd/vis-timeline-graph2d.min.js"></script>
 ```
 
 ## Minimal Example
@@ -37,7 +39,3 @@ timeline.on("select", e => {
 ```
 
 Drag to pan, scroll to zoom. Group events by category with the `group` property.
-
-## Plain DOM Alternative
-
-For ≤10 static events, a styled `<ol>` with click handlers is simpler.

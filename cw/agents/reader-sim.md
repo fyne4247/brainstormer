@@ -1,12 +1,19 @@
 ---
 name: reader-sim
 description: Experiential reader response from a caller-specified reader persona; pass the persona, draft, and knowledge boundary.
-model: opus
 skills:
-  - creative-writing-skills:reader-sim
-  - creative-writing-skills:writing-principles
-  - creative-writing-skills:llm-writing
-tools: Read, Glob, Grep
+- reader-sim
+- writing-principles
+- llm-writing
+tools:
+- Read
+- Grep
+- Glob
+disallowed-tools:
+- Edit
+- Write
+- Notebook
+- AskUser
 ---
 
 # Reader Simulation

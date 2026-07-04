@@ -1,17 +1,21 @@
 # Diff / Comparison
 
 Side-by-side or unified diff view with syntax highlighting. Use for before/after
-comparisons, version diffs, or change review.
+comparisons, version diffs, or change review. For a short comparison without
+syntax highlighting, two `<pre>` elements side by side with highlighted lines
+beat loading a library.
 
 ## Library
 
-**Diff2Html** for rendering + **jsdiff** for computing diffs from strings.
-Diff2Html ~335 KB gzipped (with syntax highlighting), jsdiff ~8 KB gzipped.
+**Diff2Html** for rendering + **jsdiff** for computing diffs from strings. Use
+the `-slim` bundle (~97 KB gzipped, common languages: JS, TS, Python, CSS,
+JSON…) — the full bundle is ~335 KB for every highlight.js language and rarely
+earns it. jsdiff is ~10 KB gzipped.
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/diff2html@3.4.56/bundles/css/diff2html.min.css">
-<script src="https://cdn.jsdelivr.net/npm/diff@8.0.2/dist/diff.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/diff2html@3.4.56/bundles/js/diff2html-ui.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/diff2html@3/bundles/css/diff2html.min.css">
+<script src="https://cdn.jsdelivr.net/npm/diff@9/dist/diff.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/diff2html@3/bundles/js/diff2html-ui-slim.min.js"></script>
 ```
 
 If you already have a unified diff string, omit jsdiff.
@@ -45,8 +49,3 @@ function renderDiff(mode) {
 renderDiff("side-by-side");
 </script>
 ```
-
-## Plain DOM Alternative
-
-For a simple two-column text comparison without syntax highlighting, two `<pre>`
-elements side by side with highlighted lines is less code than loading Diff2Html.

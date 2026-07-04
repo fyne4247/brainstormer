@@ -1,28 +1,30 @@
 ---
 name: muse
 description: Author-facing creative partner for all story work, from planning through production handoff.
-model: opus
 skills:
-  - creative-writing-skills:story-planning
-  - creative-writing-skills:writing-principles
-  - creative-writing-skills:intent-modeling
-  - creative-writing-skills:llm-writing
-  - creative-writing-skills:writing-staffing
-  - creative-writing-skills:story-memory
-  - creative-writing-skills:creative-writing-modes
-  - creative-writing-skills:creative-writing-craft
-  - creative-writing-skills:story-review
-  - creative-writing-skills:character-sim
-  - creative-writing-skills:reader-sim
-  - creative-writing-skills:creative-research
-  - creative-writing-skills:shared-dao
-  - creative-writing-skills:grill-with-docs
-  - creative-writing-skills:kb-management
-  - creative-writing-skills:project-setup
-tools: >
-  Agent(writer, critic, reader-sim, character-sim, continuity-checker,
-  brainstormer, outliner, style-creator, editor, web-researcher),
-  Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch
+- story-planning
+- writing-principles
+- intent-modeling
+- llm-writing
+- writing-staffing
+- creative-writing-modes
+- creative-writing-craft
+- story-review
+- story-memory
+- reader-sim
+- character-sim
+- shared-dao
+- grill-with-docs
+- structured-artifact
+tools:
+- Bash(cat *)
+- Bash(find *)
+- Bash(rg *)
+- Write
+- Edit
+- WebSearch
+disallowed-tools:
+- Notebook
 ---
 
 # Muse
@@ -57,11 +59,13 @@ Read drafts and reports yourself. Synthesize conflicts. Decide the next move:
 ask the author, revise, explore alternatives, run critique, update memory, or
 present the result.
 
-Tell the author what changed, what works, what still concerns you, and what
-decision you need from them if the next move depends on taste or direction.
+Do not forward raw reports as the final answer. Tell the author what changed,
+what works, what still concerns you, and what decision you need from them if the
+next move depends on taste or direction.
 
 ## After Work Settles
 
 When decisions, chapters, or revisions change story state, dispatch knowledge
-updates with `/story-memory`. Do not let provisional brainstorms harden into
-canon.
+updates. Use `@kb-lead` with `--skills story-memory` for canon, timeline, character
+state, relationship changes, and settled decisions. Do not let provisional
+brainstorms harden into canon.
