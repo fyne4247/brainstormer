@@ -352,6 +352,9 @@ def run(apply: bool) -> int:
                 problems.append(f"{md.relative_to(REPO)}: @{ref} does not match a cw agent")
 
     # 7. Version consistency: marketplace.json must match mars.toml.
+    # Auto-fixed in both modes — the version is purely derived, never
+    # independently authored, so blocking on it just creates a chicken-and-egg
+    # when `mars version patch` bumps mars.toml before the commit hook runs.
     mars_toml = REPO / "mars.toml"
     marketplace_json = REPO / ".claude-plugin" / "marketplace.json"
     if mars_toml.is_file() and marketplace_json.is_file():
@@ -365,15 +368,14 @@ def run(apply: bool) -> int:
         mp = _json.loads(marketplace_json.read_text())
         mp_ver = mp.get("metadata", {}).get("version")
         if mars_ver and mp_ver and mars_ver != mp_ver:
-            if apply:
-                mp["metadata"]["version"] = mars_ver
-                marketplace_json.write_text(_json.dumps(mp, indent=2) + "\n")
-                notes.append(f"bumped marketplace.json version {mp_ver} → {mars_ver}")
-            else:
-                problems.append(
-                    f"marketplace.json version ({mp_ver}) ≠ mars.toml ({mars_ver})"
-                    f" — run --apply to sync"
-                )
+            mp["metadata"]["version"] = mars_ver
+            marketplace_json.write_text(_json.dumps(mp, indent=2) + "\n")
+            # Stage so the in-flight commit picks it up (no-op outside git)
+            subprocess.run(
+                ["git", "add", str(marketplace_json)],
+                cwd=REPO, capture_output=True,
+            )
+            notes.append(f"bumped marketplace.json version {mp_ver} → {mars_ver}")
 
     for n in notes:
         print(f"  · {n}")
