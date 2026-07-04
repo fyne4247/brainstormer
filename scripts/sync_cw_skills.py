@@ -14,7 +14,8 @@ Build and lint the `cw/` Claude/plugin distribution (skills + agents).
              overwrites these; it only lints them.
 
 Usage:
-  python scripts/sync_cw_skills.py            # check mode; exit 1 on problems
+  python scripts/sync_cw_skills.py            # full check: Mars build + drift + lint
+  python scripts/sync_cw_skills.py --lint     # lint only (no Mars build); use in CI
   python scripts/sync_cw_skills.py --apply    # run Mars sync + refresh GENERATED components
   python scripts/sync_cw_skills.py --list     # print classification and exit
 """
@@ -249,54 +250,59 @@ def agent_skill_refs(path: pathlib.Path) -> list[str]:
     return refs
 
 
-def run(apply: bool) -> int:
+def run(apply: bool, lint_only: bool = False) -> int:
     problems: list[str] = []
     notes: list[str] = []
 
-    claude_root: pathlib.Path | None = None
-    try:
-        claude_root = build_claude_output()
-    except Exception as exc:
-        problems.append(str(exc))
+    # 1–2. Sync or drift-check GENERATED components (skipped in lint-only).
+    # Drift checks rebuild from Mars and diff — useful locally to catch
+    # forgotten --apply runs, but fragile in CI where the resolved
+    # meridian-base version may differ from what was synced locally.
+    if not lint_only:
+        claude_root: pathlib.Path | None = None
+        try:
+            claude_root = build_claude_output()
+        except Exception as exc:
+            problems.append(str(exc))
 
-    generated_skills_root = claude_root / "skills" if claude_root else None
-    generated_agents_root = claude_root / "agents" if claude_root else None
+        generated_skills_root = claude_root / "skills" if claude_root else None
+        generated_agents_root = claude_root / "agents" if claude_root else None
 
-    # 1. Sync or drift-check GENERATED skills.
-    if generated_skills_root is not None:
-        for name in GENERATED_SKILLS:
-            src_dir = generated_skills_root / name
-            cw_dir = CW_SKILLS / name
-            if not src_dir.is_dir():
-                problems.append(f"GENERATED skill {name} missing from Mars .claude/skills output")
-                continue
-            if apply:
-                if copy_skill_dir(src_dir, cw_dir):
-                    notes.append(f"synced skill {name}")
-            else:
-                if not cw_dir.is_dir():
-                    problems.append(f"{name}: cw/skills/{name}/ missing (run --apply)")
+        # 1. Sync or drift-check GENERATED skills.
+        if generated_skills_root is not None:
+            for name in GENERATED_SKILLS:
+                src_dir = generated_skills_root / name
+                cw_dir = CW_SKILLS / name
+                if not src_dir.is_dir():
+                    problems.append(f"GENERATED skill {name} missing from Mars .claude/skills output")
                     continue
-                if _dir_differs(src_dir, cw_dir):
-                    problems.append(f"{name}: cw skill dir drifted from Mars .claude output (run --apply)")
+                if apply:
+                    if copy_skill_dir(src_dir, cw_dir):
+                        notes.append(f"synced skill {name}")
+                else:
+                    if not cw_dir.is_dir():
+                        problems.append(f"{name}: cw/skills/{name}/ missing (run --apply)")
+                        continue
+                    if _dir_differs(src_dir, cw_dir):
+                        problems.append(f"{name}: cw skill dir drifted from Mars .claude output (run --apply)")
 
-    # 2. Sync or drift-check GENERATED agents.
-    if generated_agents_root is not None:
-        for name in GENERATED_AGENTS:
-            src = generated_agents_root / f"{name}.md"
-            dst = CW_AGENTS / f"{name}.md"
-            if not src.is_file():
-                problems.append(f"GENERATED agent {name} missing from Mars .claude/agents output")
-                continue
-            if apply:
-                if copy_agent_file(src, dst):
-                    notes.append(f"synced agent {name}")
-            else:
-                if not dst.is_file():
-                    problems.append(f"{name}: cw/agents/{name}.md missing (run --apply)")
+        # 2. Sync or drift-check GENERATED agents.
+        if generated_agents_root is not None:
+            for name in GENERATED_AGENTS:
+                src = generated_agents_root / f"{name}.md"
+                dst = CW_AGENTS / f"{name}.md"
+                if not src.is_file():
+                    problems.append(f"GENERATED agent {name} missing from Mars .claude/agents output")
                     continue
-                if _scrub_agent(src.read_text()) != dst.read_text():
-                    problems.append(f"{name}: cw agent drifted from Mars .claude output (run --apply)")
+                if apply:
+                    if copy_agent_file(src, dst):
+                        notes.append(f"synced agent {name}")
+                else:
+                    if not dst.is_file():
+                        problems.append(f"{name}: cw/agents/{name}.md missing (run --apply)")
+                        continue
+                    if _scrub_agent(src.read_text()) != dst.read_text():
+                        problems.append(f"{name}: cw agent drifted from Mars .claude output (run --apply)")
 
     # 3. Classification completeness: every cw component must be classified.
     classified_skills = set(GENERATED_SKILLS) | set(MANUAL_SKILLS)
@@ -396,6 +402,7 @@ def run(apply: bool) -> int:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--apply", action="store_true", help="sync GENERATED components from Mars .claude output")
+    ap.add_argument("--lint", action="store_true", help="lint only (skip Mars build + drift check); use in CI")
     ap.add_argument("--list", action="store_true", help="print classification and exit")
     args = ap.parse_args()
 
@@ -415,8 +422,9 @@ def main() -> int:
                 print(f"  {n}")
         return 0
 
-    print(f"{'Applying' if args.apply else 'Checking'} cw distribution sync...")
-    return run(apply=args.apply)
+    mode = "Applying" if args.apply else "Linting" if args.lint else "Checking"
+    print(f"{mode} cw distribution sync...")
+    return run(apply=args.apply, lint_only=args.lint)
 
 
 if __name__ == "__main__":

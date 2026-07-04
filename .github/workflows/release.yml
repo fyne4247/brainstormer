@@ -53,7 +53,7 @@ jobs:
           exit $error
 
       - name: Check cw skill sync (drift + leaked Meridian vocab)
-        run: python3 scripts/sync_cw_skills.py
+        run: python3 scripts/sync_cw_skills.py --lint
 
       - name: Verify tag matches mars.toml version
         run: |

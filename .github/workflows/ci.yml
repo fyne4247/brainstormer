@@ -50,8 +50,8 @@ jobs:
           done
           exit $error
 
-      - name: Check cw skill sync (drift + leaked Meridian vocab)
-        run: python3 scripts/sync_cw_skills.py
+      - name: Lint cw distribution (leaks, refs, frontmatter, version)
+        run: python3 scripts/sync_cw_skills.py --lint
 
       - name: Build Claude.ai skill packages
         run: python3 scripts/create_skill_zips.py

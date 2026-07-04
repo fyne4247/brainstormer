@@ -48,8 +48,9 @@ package from an inherited Meridian environment. For task checkouts, prefer
 - **MANUAL** — skills carrying cw-specific adaptations, cw-only behavior, or dependency changes not yet available through a released Mars dependency. Hand-maintained; the tool lints but never overwrites them.
 
 ```bash
-python3 scripts/sync_cw_skills.py            # check for drift (CI gate); exit 1 on problems
-python3 scripts/sync_cw_skills.py --apply    # build temp Mars consumer and refresh GENERATED skills
+python3 scripts/sync_cw_skills.py            # full check: Mars build + drift + lint
+python3 scripts/sync_cw_skills.py --lint     # lint only (no Mars build); used by CI and pre-commit
+python3 scripts/sync_cw_skills.py --apply    # build temp Mars consumer and refresh GENERATED components
 python3 scripts/sync_cw_skills.py --list     # print the GENERATED/MANUAL classification
 ```
 
