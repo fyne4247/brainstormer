@@ -137,9 +137,6 @@ if [ "$EFFORT_SUPPORTED" -eq 1 ]; then
     4) EFFORT="xhigh" ;;
     5) EFFORT="max" ;;
   esac
-else
-  echo ""
-  echo "(Effort isn't adjustable on $MODEL -- skipping that question.)"
 fi
 
 # --- Project ---------------------------------------------------------------
@@ -155,18 +152,40 @@ for dir in */; do
 done
 
 PROJECT=""
-if [ "${#PROJECTS[@]}" -gt 0 ]; then
+NEW_PROJECT=""
+echo ""
+echo "Which project?"
+i=1
+for p in "${PROJECTS[@]}"; do
+  echo "  $i) $p"
+  i=$((i + 1))
+done
+NEW_PROJECT_CHOICE=$i
+echo "  $NEW_PROJECT_CHOICE) New project"
+ASK_LATER_CHOICE=$((i + 1))
+echo "  $ASK_LATER_CHOICE) let muse ask / not sure yet"
+read -r -p "> " CHOICE
+
+if [[ "$CHOICE" =~ ^[0-9]+$ ]] && [ "$CHOICE" -ge 1 ] && [ "$CHOICE" -le "${#PROJECTS[@]}" ]; then
+  PROJECT="${PROJECTS[$((CHOICE - 1))]}"
+elif [ "$CHOICE" = "$NEW_PROJECT_CHOICE" ]; then
+  # Do the mechanical setup (folder, git init, hook wiring) here in plain
+  # bash instead of having Claude do it via tool calls -- saves the new
+  # session a handful of Bash round-trips before the interview even starts.
   echo ""
-  echo "Which project?"
-  echo "  0) let muse ask / not sure yet"
-  i=1
-  for p in "${PROJECTS[@]}"; do
-    echo "  $i) $p"
-    i=$((i + 1))
-  done
-  read -r -p "> " CHOICE
-  if [[ "$CHOICE" =~ ^[0-9]+$ ]] && [ "$CHOICE" -ge 1 ] && [ "$CHOICE" -le "${#PROJECTS[@]}" ]; then
-    PROJECT="${PROJECTS[$((CHOICE - 1))]}"
+  read -r -p "New project name (this becomes the folder name): " NEW_NAME
+  if [ -z "$NEW_NAME" ]; then
+    echo "No name entered -- skipping new-project setup."
+  elif [[ "$NEW_NAME" == */* ]]; then
+    echo "Project names can't contain \"/\" -- skipping new-project setup."
+  elif [ -e "$NEW_NAME" ]; then
+    echo "\"$NEW_NAME\" already exists -- pick it from the list next time instead."
+  else
+    mkdir -p "$NEW_NAME"
+    git -C "$NEW_NAME" init -q
+    sh scripts/install-flatten-hook.sh >/dev/null
+    echo "Created \"$NEW_NAME\" and set it up as a git repo."
+    NEW_PROJECT="$NEW_NAME"
   fi
 fi
 
@@ -176,7 +195,10 @@ ARGS=(--agent muse)
 [ -n "$EFFORT" ] && ARGS+=(--effort "$EFFORT")
 
 echo ""
-if [ -n "$PROJECT" ]; then
+if [ -n "$NEW_PROJECT" ]; then
+  echo "Starting muse to set up \"$NEW_PROJECT\"..."
+  claude "${ARGS[@]}" "/setup $NEW_PROJECT"
+elif [ -n "$PROJECT" ]; then
   echo "Starting muse on project: $PROJECT"
   claude "${ARGS[@]}" "I'd like to work on the \"$PROJECT\" project. Please read $PROJECT/CLAUDE.md and exports/$PROJECT.ai.md before we start."
 else

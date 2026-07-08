@@ -54,9 +54,11 @@ session ends.
   numbered list, or skip for the default. Only asked when the chosen model
   actually supports adjustable effort (Fable 5, Sonnet 5, Opus 4.8, Opus
   4.7, Opus 4.6, Sonnet 4.6) — older models like Sonnet 4.5, Haiku, and
-  Opus 3 don't support it, so the launcher skips the question for those.
-- **Project** — pick from any subfolder that has its own `CLAUDE.md`, or
-  skip and let muse ask once it's running.
+  Opus 3 don't support it, so the launcher skips that question entirely
+  rather than showing a note about it.
+- **Project** — existing subfolders that have their own `CLAUDE.md` are
+  listed first, followed by **New project** and, last, **let muse ask /
+  not sure yet**.
 
 These all run before Claude ever starts, as ordinary shell prompts
 (`read -p`), and feed straight into real CLI flags (`--model`, `--effort`).
@@ -66,6 +68,15 @@ the first message of the session: read that project's `CLAUDE.md` and its
 `exports/<project>.ai.md` snapshot (see "Flattened snapshots" below) —
 the cheap, pre-flattened context file, not every individual `kb/` file —
 before acting.
+
+**New project:** typing a name here does the mechanical setup — creates
+the folder, runs `git init`, and wires up auto-export hooks — in plain
+shell *before* Claude ever starts, so the session that follows skips
+straight to `/setup <name>` (the interview, `kb/` structure, and
+`CLAUDE.md`) instead of spending tool calls on `mkdir`/`git init` first.
+If the name is empty, contains `/`, or a folder with that name already
+exists, the launcher says so and falls back to the normal "let muse ask"
+flow rather than guessing.
 
 **When the session ends** — however it ends (`/exit`, closing the window,
 a crash) — the launcher checks every project subfolder for uncommitted
