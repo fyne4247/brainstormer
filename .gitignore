@@ -1,18 +1,6 @@
 .DS_Store
-/zips/
-/test/
-/.mars/
-/.meridian/
 .claude/settings.local.json
+exports/
 
-/.agents/agents/
-/.agents/skills/
-/.claude/agents/
-/.claude/skills/
-mars.lock
-/.cursor/agents/
-/.cursor/skills/
-/.codex/agents/
-/.codex/skills/
-/.opencode/agents/
-/.opencode/skills/
+# Each project subfolder is its own git repo — don't track them in the workspace repo
+# (list each project folder here as it's created, or use a wildcard pattern)

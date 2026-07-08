@@ -4,7 +4,15 @@
       "Bash",
       "WebSearch",
       "WebFetch",
-      "Skill"
+      "Skill",
+      "Bash(git status:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git init:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(python3 scripts/flatten_project.py:*)",
+      "Bash(sh scripts/install-flatten-hook.sh:*)"
     ],
     "deny": []
   }

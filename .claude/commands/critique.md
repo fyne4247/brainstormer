@@ -3,9 +3,12 @@ description: Get adversarial critique and feedback on your writing
 ---
 
 Use the prose-critique skill to analyze story content and provide feedback.
+If I ask for a holistic pass across structure, voice, line quality, and
+consistency rather than a deep dive on one dimension, use editorial-review
+instead (or dispatch the editor agent).
 
 Before critiquing:
-1. Ask what kind of feedback they're looking for (structure, character, voice, prose, continuity)
+1. Ask what kind of feedback they're looking for (structure, character, voice, prose, continuity — or a holistic editorial pass)
 2. Ask about draft stage (early, mid, late) to calibrate severity
 
 Critique calibrated to stage:

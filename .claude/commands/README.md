@@ -1,6 +1,7 @@
 # Creative Writing Slash Commands
 
-These custom slash commands provide explicit mode switching for the creative writing skills.
+These custom slash commands provide explicit mode switching for the editorial
+workspace's skills.
 
 ## Available Commands
 
@@ -13,18 +14,15 @@ These custom slash commands provide explicit mode switching for the creative wri
 /bs What if the antagonist actually...
 ```
 
-### Writing Prose
-- **`/write [style]`** - Enter prose writing mode
+### Critique
+- **`/critique`** - Get feedback on your writing (deep-dive or holistic editorial pass)
 
 **Usage:**
 ```
-/write                          (uses project style files if found)
-/write action-heavy             (writes in action-heavy style)
-/write literary                 (writes in literary style)
-/write the next scene where...  (context for what to write)
+/critique [file or paste text]
+/critique Analyze the pacing in chapter 3
+/critique Give me a full editorial pass on this chapter
 ```
-
-If a style name is provided and no matching style file exists in `kb/styles/`, Claude will use general conventions for that style.
 
 ### Knowledge Base
 - **`/kb`** - Create or update kb reference pages
@@ -36,13 +34,21 @@ If a style name is provided and no matching style file exists in `kb/styles/`, C
 /kb Document the timeline for act 2
 ```
 
-### Critique
-- **`/critique`** - Get adversarial feedback on your writing
+### Saving Progress
+- **`/save`** - Save your progress (creates a versioned snapshot of the active project)
 
 **Usage:**
 ```
-/critique [file or paste text]
-/critique Analyze the pacing in chapter 3
+/save
+/save Added Ellora's character profile
+```
+
+### Project Setup
+- **`/setup`** - One-time setup for a new writing project
+
+**Usage:**
+```
+/setup Breaking the Beasts
 ```
 
 ## Why Use Slash Commands?
@@ -56,7 +62,7 @@ If a style name is provided and no matching style file exists in `kb/styles/`, C
 
 You can still use natural language to invoke skills:
 - "Help me brainstorm ideas for my antagonist"
-- "Write this scene in my style"
 - "Critique the pacing in chapter 3"
+- "Save my progress"
 
 The slash commands just provide an explicit alternative when you want guaranteed skill activation.

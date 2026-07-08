@@ -1,0 +1,22 @@
+#!/bin/sh
+# Auto-regenerate the flattened single-file snapshot after every commit.
+#
+# Shared by every subproject repo via core.hooksPath (see
+# scripts/install-flatten-hook.sh). Generic: it derives the project name from
+# the repo's own folder, so no per-project code is needed.
+#
+# The snapshot (e.g. breakingthebeasts.md) is written to the WORKSPACE ROOT,
+# which is a different repo than the project being committed — so this never
+# creates a dirty-tree loop in the project repo. Commit the refreshed snapshot
+# in the workspace repo whenever you choose.
+
+repo="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+project="$(basename "$repo")"
+workspace="$(dirname "$repo")"
+script="$workspace/scripts/flatten_project.py"
+
+[ -f "$script" ] || exit 0
+command -v python3 >/dev/null 2>&1 || exit 0
+
+python3 "$script" "$project" >/dev/null 2>&1 || true
+exit 0
