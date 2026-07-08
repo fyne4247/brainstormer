@@ -106,24 +106,41 @@ if [ -n "$MODEL" ]; then
 fi
 
 # --- Effort ----------------------------------------------------------------
-echo ""
-echo "Effort? (how much the model thinks before responding)"
-echo "  1) low"
-echo "  2) medium"
-echo "  3) high"
-echo "  4) xhigh"
-echo "  5) max"
-echo "  0) Skip (use default)"
-read -r -p "> " EFFORT_CHOICE
+# Effort (adjustable reasoning depth) only exists on Fable 5, Sonnet 5,
+# Opus 4.8, Opus 4.7, Opus 4.6, and Sonnet 4.6. Older/legacy models
+# (Opus 4.5, Opus 3, Sonnet 4.5, Sonnet 4.0, Haiku) don't support it at
+# all, so skip asking rather than offer a setting that won't apply.
+# Leaving the model unset (skip) also supports effort -- Claude Code's
+# own default lands on one of the supported models.
+EFFORT_SUPPORTED=1
+case "$MODEL" in
+  claude-opus-4-8|claude-opus-4-7|claude-opus-4-6|claude-sonnet-5|claude-sonnet-4-6|claude-fable-5|"") ;;
+  *) EFFORT_SUPPORTED=0 ;;
+esac
 
 EFFORT=""
-case "$EFFORT_CHOICE" in
-  1) EFFORT="low" ;;
-  2) EFFORT="medium" ;;
-  3) EFFORT="high" ;;
-  4) EFFORT="xhigh" ;;
-  5) EFFORT="max" ;;
-esac
+if [ "$EFFORT_SUPPORTED" -eq 1 ]; then
+  echo ""
+  echo "Effort? (how much the model thinks before responding)"
+  echo "  1) low"
+  echo "  2) medium"
+  echo "  3) high"
+  echo "  4) xhigh"
+  echo "  5) max"
+  echo "  0) Skip (use default)"
+  read -r -p "> " EFFORT_CHOICE
+
+  case "$EFFORT_CHOICE" in
+    1) EFFORT="low" ;;
+    2) EFFORT="medium" ;;
+    3) EFFORT="high" ;;
+    4) EFFORT="xhigh" ;;
+    5) EFFORT="max" ;;
+  esac
+else
+  echo ""
+  echo "(Effort isn't adjustable on $MODEL -- skipping that question.)"
+fi
 
 # --- Project ---------------------------------------------------------------
 # List subfolders that look like writing projects (have their own CLAUDE.md),

@@ -51,7 +51,10 @@ session ends.
   they still launch, but Claude Code itself will show a warning banner.
   Enter or `0` at either menu skips and uses Claude Code's own default.
 - **Effort** — pick `low` / `medium` / `high` / `xhigh` / `max` from a
-  numbered list, or skip for the default.
+  numbered list, or skip for the default. Only asked when the chosen model
+  actually supports adjustable effort (Fable 5, Sonnet 5, Opus 4.8, Opus
+  4.7, Opus 4.6, Sonnet 4.6) — older models like Sonnet 4.5, Haiku, and
+  Opus 3 don't support it, so the launcher skips the question for those.
 - **Project** — pick from any subfolder that has its own `CLAUDE.md`, or
   skip and let muse ask once it's running.
 
