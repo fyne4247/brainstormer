@@ -119,7 +119,19 @@ work, establish which subfolder is active:
 
 1. If the author named a project (e.g. "let's work on shaken"), that subfolder
    is the active project. If they didn't, **ask which one** — do not guess.
-2. Read that project's `CLAUDE.md` and skim its `kb/` before acting.
+2. Read that project's `CLAUDE.md`, then load context from
+   `exports/<slug>.ai.md` — one flat, ordered snapshot of the whole project,
+   far cheaper than crawling `kb/` file by file. Find the slug by lowercasing
+   the project name and stripping non-alphanumerics (e.g. "RHO IOTA PHI" →
+   `exports/rhoiotaphi.ai.md`), or run `ls exports/`. Prefer this over opening
+   individual `kb/` files for reading. **When you need to change something,
+   do not edit the export** — it is a read-only derived artifact, regenerated
+   on every save. Instead open the exact individual file named in the nearest
+   `<!-- source: <path> -->` comment above that passage and edit *that* file.
+   To create a new kb file, just write it; the next save regenerates the
+   snapshot. (If `exports/<slug>.ai.md` is missing, run
+   `python3 scripts/flatten_project.py "<Project Name>"` once, or fall back to
+   reading `kb/` directly.)
 3. From then on, only read and write **inside that subfolder**. Treat the
    sibling project folders as off-limits — do not open their files, and never
    import their canon, vocabulary, characters, or style.

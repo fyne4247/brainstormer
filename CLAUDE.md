@@ -119,9 +119,21 @@ Every subproject can be exported to a single combined Markdown file in the
 **`exports/` folder** at the workspace root (e.g. `exports/breakingthebeasts.md`)
 — a one-file snapshot of that project's whole KB, for search or sharing. The
 generator is `scripts/flatten_project.py` (see `.claude/skills/flatten-project/`);
-it only reads inside the named project and writes one file into `exports/`. The
-export is a **derived artifact, never a source of truth** — the per-file `kb/`
-remains canonical. Project `CLAUDE.md` files are excluded from the export, and
+it only reads inside the named project and writes into `exports/`.
+
+Each run writes **two** snapshots, in a fixed reading order (outline, timeline,
+story, drafts, brainstorm, characters, world, canon, styles, issues, samples):
+
+- `exports/<slug>.md` — clean, **user-facing** snapshot, no AI annotations.
+- `exports/<slug>.ai.md` — same content plus a `<!-- source: <path> -->`
+  comment above each file's block and a read-only header. **This is what muse
+  loads** for cheap session context; the source comments let it trace any
+  passage back to the exact individual file to edit.
+
+Both are **derived artifacts, never a source of truth** — the per-file `kb/`
+remains canonical. Nothing edits the exports directly: to change knowledge,
+edit the individual file (muse uses the `source:` comment to find it) and let
+the next save regenerate the snapshots. Project `CLAUDE.md` files are excluded from the export, and
 `exports/` is git-ignored so the regenerated files don't clutter version
 control.
 
