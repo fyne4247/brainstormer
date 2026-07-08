@@ -51,13 +51,79 @@ if [ "${#NOT_WIRED[@]}" -gt 0 ]; then
 fi
 
 # --- Model ---------------------------------------------------------------
-echo "Model? (opus / sonnet / fable / haiku, or press Enter for default)"
-read -r -p "> " MODEL
+echo "Model family?"
+echo "  1) Opus"
+echo "  2) Sonnet"
+echo "  3) Haiku"
+echo "  4) Fable"
+echo "  0) Skip (use Claude Code's default)"
+read -r -p "> " FAMILY_CHOICE
+
+MODEL=""
+case "$FAMILY_CHOICE" in
+  1)
+    echo ""
+    echo "Which Opus version?"
+    echo "  1) Opus 4.8 (current, recommended)"
+    echo "  2) Opus 4.7"
+    echo "  3) Opus 4.6"
+    echo "  4) Opus 4.5"
+    echo "  5) Opus 3 (retired -- still launches, shows a warning)"
+    read -r -p "> " VERSION_CHOICE
+    case "$VERSION_CHOICE" in
+      1) MODEL="claude-opus-4-8" ;;
+      2) MODEL="claude-opus-4-7" ;;
+      3) MODEL="claude-opus-4-6" ;;
+      4) MODEL="claude-opus-4-5" ;;
+      5) MODEL="claude-opus-3" ;;
+    esac
+    ;;
+  2)
+    echo ""
+    echo "Which Sonnet version?"
+    echo "  1) Sonnet 5 (current, recommended)"
+    echo "  2) Sonnet 4.6"
+    echo "  3) Sonnet 4.5"
+    echo "  4) Sonnet 4.0 (retired -- still launches, shows a warning)"
+    read -r -p "> " VERSION_CHOICE
+    case "$VERSION_CHOICE" in
+      1) MODEL="claude-sonnet-5" ;;
+      2) MODEL="claude-sonnet-4-6" ;;
+      3) MODEL="claude-sonnet-4-5" ;;
+      4) MODEL="claude-sonnet-4-0" ;;
+    esac
+    ;;
+  3)
+    MODEL="claude-haiku-4-5"
+    ;;
+  4)
+    MODEL="claude-fable-5"
+    ;;
+esac
+
+if [ -n "$MODEL" ]; then
+  echo "Using model: $MODEL"
+fi
 
 # --- Effort ----------------------------------------------------------------
 echo ""
-echo "Effort? (low / medium / high / xhigh / max, or press Enter for default)"
-read -r -p "> " EFFORT
+echo "Effort? (how much the model thinks before responding)"
+echo "  1) low"
+echo "  2) medium"
+echo "  3) high"
+echo "  4) xhigh"
+echo "  5) max"
+echo "  0) Skip (use default)"
+read -r -p "> " EFFORT_CHOICE
+
+EFFORT=""
+case "$EFFORT_CHOICE" in
+  1) EFFORT="low" ;;
+  2) EFFORT="medium" ;;
+  3) EFFORT="high" ;;
+  4) EFFORT="xhigh" ;;
+  5) EFFORT="max" ;;
+esac
 
 # --- Project ---------------------------------------------------------------
 # List subfolders that look like writing projects (have their own CLAUDE.md),
@@ -95,11 +161,31 @@ ARGS=(--agent muse)
 echo ""
 if [ -n "$PROJECT" ]; then
   echo "Starting muse on project: $PROJECT"
-  claude "${ARGS[@]}" "I'd like to work on the \"$PROJECT\" project. Please read $PROJECT/CLAUDE.md and its kb/ before we start."
+  claude "${ARGS[@]}" "I'd like to work on the \"$PROJECT\" project. Please read $PROJECT/CLAUDE.md and exports/$PROJECT.ai.md before we start."
 else
   echo "Starting muse..."
   claude "${ARGS[@]}"
 fi
+
+# --- Ask to save any unsaved progress --------------------------------------
+# The claude session has already ended by this point, so there's no model
+# available to write a natural-language commit message -- this is a safety
+# net (a plain timestamped commit), not a substitute for a real /save.
+echo ""
+for dir in */; do
+  name="${dir%/}"
+  [ -d "$name/.git" ] || continue
+  [ -n "$(git -C "$name" status --porcelain 2>/dev/null)" ] || continue
+  read -r -p "Save progress on \"$name\"? [Y/n] " SAVE_ANSWER
+  case "$SAVE_ANSWER" in
+    [Nn]*) : ;;
+    *)
+      git -C "$name" add -A
+      git -C "$name" commit -m "Progress saved -- $(date '+%Y-%m-%d %H:%M')" >/dev/null
+      echo "Saved \"$name\"."
+      ;;
+  esac
+done
 
 # Keep the terminal window open after the session ends.
 echo ""

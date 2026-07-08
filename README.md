@@ -36,20 +36,42 @@ samples, and writes that project's `CLAUDE.md`.
 
 `Brainstormer.command` is a double-clickable shortcut that starts a muse
 session without opening a terminal manually. It always runs from the
-workspace root (wherever the file itself lives), then asks three quick
-questions before launching:
+workspace root (wherever the file itself lives), walks you through a few
+quick menus before launching, and offers to save your work once the
+session ends.
 
-- **Model** — `opus`, `sonnet`, `fable`, `haiku`, or Enter for the default
-- **Effort** — `low`, `medium`, `high`, `xhigh`, `max`, or Enter for the default
+- **Model** — pick a family first (`Opus` / `Sonnet` / `Haiku` / `Fable`),
+  then a specific version from a numbered list, e.g.:
+  - Opus: 4.8 (recommended), 4.7, 4.6, 4.5, or 3
+  - Sonnet: 5 (recommended), 4.6, 4.5, or 4.0
+  - Haiku and Fable each have one current version, so there's no
+    sub-menu — just confirm the family.
+
+  Retired versions (currently Opus 3 and Sonnet 4.0) are labeled as such —
+  they still launch, but Claude Code itself will show a warning banner.
+  Enter or `0` at either menu skips and uses Claude Code's own default.
+- **Effort** — pick `low` / `medium` / `high` / `xhigh` / `max` from a
+  numbered list, or skip for the default.
 - **Project** — pick from any subfolder that has its own `CLAUDE.md`, or
-  skip and let muse ask once it's running
+  skip and let muse ask once it's running.
 
-These are ordinary shell prompts (`read -p`) — they run before Claude ever
-starts, and feed straight into real CLI flags (`--model`, `--effort`). The
-project choice can't become a CLI flag the same way (Claude Code doesn't
-have a "which project" flag), so instead it's handed to muse as the first
-message of the session, which is exactly what `CLAUDE.md` already tells
-muse to do: read that project's `CLAUDE.md` and `kb/` before acting.
+These all run before Claude ever starts, as ordinary shell prompts
+(`read -p`), and feed straight into real CLI flags (`--model`, `--effort`).
+The project choice can't become a CLI flag the same way (Claude Code
+doesn't have a "which project" flag), so instead it's handed to muse as
+the first message of the session: read that project's `CLAUDE.md` and its
+`exports/<project>.ai.md` snapshot (see "Flattened snapshots" below) —
+the cheap, pre-flattened context file, not every individual `kb/` file —
+before acting.
+
+**When the session ends** — however it ends (`/exit`, closing the window,
+a crash) — the launcher checks every project subfolder for uncommitted
+changes and, for each one that has any, asks whether to save them. A yes
+commits with a plain timestamped message. This is a safety net for work
+you'd otherwise lose if you forget to save before exiting, not a
+replacement for the real thing: a proper `/save` (or "save my progress")
+*inside* a session still writes a natural-language commit message, and
+should be your default way of saving.
 
 **First time only — make it double-clickable:**
 
