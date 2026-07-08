@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Launcher for the Brainstormer creative-writing workspace.
-# macOS: double-click Brainstormer.command in Finder to start a muse session.
-# Windows: double-click Brainstormer.bat (requires Git Bash or WSL installed --
+# macOS: double-click brainstormer.command in Finder to start a muse session.
+# Windows: double-click brainstormer.bat (requires Git Bash or WSL installed --
 #   the .bat just finds one of those and hands off to this script). The .bat
 #   wrapper is untested on an actual Windows machine, so if it doesn't launch,
 #   try running this file directly from a Git Bash or WSL terminal instead:
-#     bash Brainstormer.sh
+#     bash brainstormer.sh
 # (First time only on macOS: see the README for how to make it double-clickable.)
 
 set -e

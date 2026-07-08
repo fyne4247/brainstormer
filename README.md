@@ -34,7 +34,7 @@ samples, and writes that project's `CLAUDE.md`.
 
 ### One-click launcher
 
-`Brainstormer.command` is a double-clickable shortcut that starts a muse
+`brainstormer.command` is a double-clickable shortcut that starts a muse
 session without opening a terminal manually. It always runs from the
 workspace root (wherever the file itself lives), walks you through a few
 quick menus before launching, and offers to save your work once the
@@ -92,9 +92,9 @@ should be your default way of saving.
 1. Open Terminal and `cd` into the folder you cloned this repo into.
 2. Run:
    ```bash
-   chmod +x Brainstormer.command
+   chmod +x brainstormer.command
    ```
-3. From then on, double-click `Brainstormer.command` in Finder to launch.
+3. From then on, double-click `brainstormer.command` in Finder to launch.
    (macOS may warn the first time that it's from an unidentified developer —
    right-click → **Open** once to approve it, then double-click normally
    after that.)
@@ -104,14 +104,14 @@ should be your default way of saving.
 Besides installing Claude Code itself, there's nothing this workspace
 strictly requires — but two things are worth knowing about:
 
-- **`chmod +x Brainstormer.command`** (above), so the launcher is
+- **`chmod +x brainstormer.command`** (above), so the launcher is
   clickable.
 - **Auto-export needs a one-time local setting.** Saving a project can
   auto-refresh its snapshot in `exports/`, but the instruction that makes
   that happen (`core.hooksPath` — see "What's a git hook?" below) lives in
   each project's local `.git/config`, which is **not** part of the files
   `git clone` copies. So a workspace cloned fresh from GitHub has the
-  export script but nothing telling git to run it. **`Brainstormer.command`
+  export script but nothing telling git to run it. **`brainstormer.command`
   checks for this every time it launches** and offers to fix it in one step
   if anything's missing — you don't need to do this manually. It's also
   always available as `sh scripts/install-flatten-hook.sh`. New projects
