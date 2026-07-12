@@ -25,8 +25,11 @@ claude --agent muse
 
 `muse` is the editorial lead — it never drafts prose, and it dispatches
 focused subagents (`critic`, `editor`, `reader-sim`, `continuity-checker`,
-`brainstormer`, `outliner`, `style-creator`, `character-sim`, `chronicler`)
-for deeper passes.
+`brainstormer`, `outliner`, `style-creator`, `character-sim`, `chronicler`,
+`book-club-reader`) for deeper passes. It can also run a **book club** via
+`/book-club` — fanning out four differently-tasted reader personas across a
+piece and staging a discussion of how distinct audiences receive it (reader
+reception, as opposed to the craft critique the other agents give).
 
 To start a new project, create a subfolder and run `/setup` from a muse
 session. It interviews you, proposes a `kb/` structure, collects writing
@@ -178,6 +181,7 @@ self-contained.
 | **critic** | Adversarial critique of a draft, one focus area at a time |
 | **editor** | Holistic book-editor pass: structure, voice, line quality, copy consistency |
 | **reader-sim** | Experiential first-time-reader response to a draft |
+| **book-club-reader** | Cheap persona-bound reader; dispatched four at a time by `/book-club` to gauge how different audiences receive a piece |
 | **character-sim** | In-character conversation for voice discovery and relationship testing |
 | **continuity-checker** | Cross-references content against established canon |
 | **outliner** | Sequences a confirmed direction into arc/chapter/beat outlines |

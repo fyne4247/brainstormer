@@ -79,6 +79,19 @@ Reference in prompt: specify the reader persona and knowledge boundary
 Run after the author's revision settles, before the author moves on. A
 scene can be technically clean and leave a reader cold.
 
+### `@book-club-reader`
+
+Reference in prompt: one persona from `/book-club`'s axis-selection method
+(target, opposite, or one of the two middle-grounds), plus its knowledge
+boundary. Attach the draft via `-f`.
+
+Always dispatch exactly 4 in parallel, one per persona from `/book-club`.
+Cheaper cost tier than `@reader-sim` — meant for fanning out several
+personas at once, not for a single deep read. Readers never see each
+other's output; muse synthesizes the discussion itself afterward, then
+exports it to `work/critique-reports/<piece-slug>/BOOK-CLUB.md` per
+`/book-club`'s export step.
+
 ### `@character-sim`
 
 Attach character state and voice/style files via `-f`. Specify the scenario

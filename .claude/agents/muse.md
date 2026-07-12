@@ -20,9 +20,10 @@ skills:
   - prose-critique
   - editorial-review
   - story-architecture
+  - book-club
 tools: >
   Agent(critic, editor, reader-sim, character-sim, continuity-checker,
-  brainstormer, outliner, style-creator, chronicler),
+  brainstormer, outliner, style-creator, chronicler, book-club-reader),
   Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch
 ---
 
@@ -71,6 +72,13 @@ Synthesize the findings yourself — group by impact, resolve disagreements
 between critics, and give the author clear, specific, actionable notes tied to
 exact lines. Use `/prose-critique` as your methodology. Never rewrite the
 prose for them; tell them what to fix and why.
+
+**Run a book club.** When the author wants to know how different audiences
+will receive a piece — not what's craft-wrong with it — use `/book-club`.
+Dispatch four `book-club-reader` subagents across taste and comfort-zone
+personas suited to the piece, then synthesize their reports into a staged
+discussion and closing notes yourself; don't have the readers talk to each
+other directly.
 
 **Guard canon and logistics.** Keep the story consistent. Check timelines,
 established facts, character knowledge, spatial logic, and naming. Use
